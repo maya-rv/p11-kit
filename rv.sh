@@ -8,7 +8,7 @@ make
 
 export RVP_ANALYSIS_ARGS="--output=json"
 export RVP_REPORT_FILE="$PWD/my_errors.json"
-timeout 15m make check
+timeout 30m make check
 
 report_path="$PWD/report"
 touch $RVP_REPORT_FILE && rv-html-report $RVP_REPORT_FILE -o $report_path
