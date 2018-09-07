@@ -2,9 +2,9 @@
 
 apt install -y automake autoconf libtool make autopoint libtasn1-dev
 
-autoreconf -fiv
-env CC=rvpc CXX=rvpc++ LD=rvpld ./configure
-make -j`nproc`
+./autogen.sh CC=rvpc CXX=rvpc++ LD=rvpld AR_FLAGS="cr"
+
+make
 
 export RVP_ANALYSIS_ARGS="--output=json"
 export RVP_REPORT_FILE="$PWD/my_errors.json"
