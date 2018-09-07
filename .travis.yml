@@ -1,59 +1,6 @@
-matrix:
-  include:
-    - os: linux
-      sudo: required
-      services: docker
-      env: BUILD_OPTS="" SRCDIR=/srcdir BUILDDIR=/builddir EXTRA_PKGS=""
-    - os: linux
-      sudo: required
-      services: docker
-      env: BUILD_OPTS="--enable-coverage" COVERAGE=yes SRCDIR=/coverage BUILDDIR=/coverage EXTRA_PKGS="lcov python-pip"
-    - os: linux
-      sudo: required
-      services: docker
-      env: BUILD_OPTS="CFLAGS='-fsanitize=address -g -fno-common -U_FORTIFY_SOURCE' CXXFLAGS='-fsanitize=address -g -fno-common -U_FORTIFY_SOURCE' LDFLAGS='-fsanitize=address -g -fno-common -U_FORTIFY_SOURCE' LIBS='-lasan -ldl -lpthread'" SRCDIR=/srcdir BUILDDIR=/builddir PRELOAD_CMD='ls -1 /usr/lib64/libasan.so.* | head -1' LSAN_OPTIONS='suppressions=/srcdir/build/lsan.supp' EXTRA_PKGS="libasan"
-    - os: linux
-      sudo: required
-      services: docker
-      env: BUILD_OPTS="CFLAGS='-fsanitize=undefined -g -fno-common -U_FORTIFY_SOURCE' CXXFLAGS='-fsanitize=undefined -g -fno-common -U_FORTIFY_SOURCE' LDFLAGS='-fsanitize=undefined -g -fno-common -U_FORTIFY_SOURCE' LIBS='-lubsan -ldl -lpthread'" SRCDIR=/srcdir BUILDDIR=/builddir EXTRA_PKGS="libubsan"
-    - os: linux
-      sudo: required
-      services: docker
-      env: BUILD_OPTS="" SCAN_BUILD="scan-build --status-bugs" SRCDIR=/srcdir BUILDDIR=/builddir EXTRA_PKGS="clang-analyzer"
-    - os: linux
-      sudo: required
-      services: docker
-      env: BUILD_OPTS="--host=x86_64-w64-mingw32 --without-libffi" CHECK_OPTS="LOG_COMPILER=/srcdir/build/wine-wrapper.sh" SRCDIR=/srcdir BUILDDIR=/builddir EXTRA_PKGS="mingw64-gcc mingw64-libffi mingw64-libtasn1 wine"
-    - os: osx
-
-language: c
-
-before_install:
-  - |
-      if test -e "./.travis/${TRAVIS_OS_NAME}/before_install.sh"; then
-        . "./.travis/${TRAVIS_OS_NAME}/before_install.sh"
-      fi
-
-install:
-  - |
-      if test -e "./.travis/${TRAVIS_OS_NAME}/install.sh"; then
-        . "./.travis/${TRAVIS_OS_NAME}/install.sh"
-      fi
-
 script:
-  - |
-      if test -e "./.travis/${TRAVIS_OS_NAME}/script.sh"; then
-        . "./.travis/${TRAVIS_OS_NAME}/script.sh"
-      fi
+  - bash <(curl -s https://runtimeverification.com/toolkit/docker/bash) nightly
 
-after_failure:
-  - |
-      if test -e "./.travis/${TRAVIS_OS_NAME}/after_failure.sh"; then
-        . "./.travis/${TRAVIS_OS_NAME}/after_failure.sh"
-      fi
-
-after_success:
-  - |
-      if test -e "./.travis/${TRAVIS_OS_NAME}/after_success.sh"; then
-        . "./.travis/${TRAVIS_OS_NAME}/after_success.sh"
-      fi
+#==============================================================================
+# This will download rv-toolkit docker image with tag "nightly" and run `rv.sh` file.
+# More images could be found at: https://hub.docker.com/r/runtimeverification/rv-sandbox/tags/
