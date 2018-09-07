@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apt install -y automake autoconf libtool make autopoint libtasn1-dev gettext
+apt install -y automake autoconf libtool make autopoint libtasn1-dev gettext pkgconf
 
 ./autogen.sh CC=rvpc CXX=rvpc++ LD=rvpld AR_FLAGS="cr"
 
